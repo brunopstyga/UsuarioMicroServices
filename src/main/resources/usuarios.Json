@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "nombre": "Bruno",
+    "apellido": "Gonzalez",
+    "email": "bruno@example.com",
+    "edad": 28,
+    "activo": true,
+    "ordenes": [
+      {
+        "ordenId": 101,
+        "fecha": "2025-09-10",
+        "total": 250.75,
+        "productos": [
+          {
+            "productoId": "A123",
+            "nombre": "Teclado Mecánico",
+            "cantidad": 1,
+            "precioUnitario": 120.50
+          },
+          {
+            "productoId": "B456",
+            "nombre": "Mouse Inalámbrico",
+            "cantidad": 1,
+            "precioUnitario": 130.25
+          }
+        ]
+      },
+      {
+        "ordenId": 102,
+        "fecha": "2025-09-11",
+        "total": 75.00,
+        "productos": [
+          {
+            "productoId": "C789",
+            "nombre": "Almohadilla para Mouse",
+            "cantidad": 1,
+            "precioUnitario": 25.00
+          },
+          {
+            "productoId": "D012",
+            "nombre": "Hub USB",
+            "cantidad": 1,
+            "precioUnitario": 50.00
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "nombre": "María",
+    "apellido": "Lopez",
+    "email": "maria@example.com",
+    "edad": 34,
+    "activo": false,
+    "ordenes": []
+  },
+  {
+    "id": 3,
+    "nombre": "Carlos",
+    "apellido": "Ramirez",
+    "email": "carlos@example.com",
+    "edad": 22,
+    "activo": true,
+    "ordenes": [
+      {
+        "ordenId": 103,
+        "fecha": "2025-09-12",
+        "total": 300.00,
+        "productos": [
+          {
+            "productoId": "E345",
+            "nombre": "Monitor 24\"",
+            "cantidad": 1,
+            "precioUnitario": 300.00
+          }
+        ]
+      }
+    ]
+  }
+]
