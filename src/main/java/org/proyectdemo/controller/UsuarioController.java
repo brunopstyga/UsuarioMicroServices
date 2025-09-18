@@ -69,24 +69,4 @@ public class UsuarioController {
             return Resource.error("Error al obtener productos: " + e.getMessage(), null);
         }
     }
-
-//    // Trae productos de una orden pero ya formateados (detalle listo para mostrar)
-//    @GetMapping("/{idUsuario}/ordenes/{idOrden}/productos/detalle")
-//    public Resource<List<ProductoDetalleDTO>> getDetalleProductos(
-//            @PathVariable Long idUsuario,
-//            @PathVariable Long idOrden
-//    ) {
-//        try {
-//            List<ProductoDetalleDTO> productosDetalle = usuarioService.obtenerDetalleProductos(idUsuario, idOrden);
-//            if (productosDetalle.isEmpty()) {
-//                return Resource.error(
-//                        "No se encontraron productos para la orden " + idOrden + " del usuario " + idUsuario,
-//                        List.of()
-//                );
-//            }
-//            return Resource.success(productosDetalle);
-//        } catch (Exception e) {
-//            return Resource.error("Error al obtener detalle de productos: " + e.getMessage(), null);
-//        }
-//    }
 }
