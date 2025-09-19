@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.proyectdemo.Util.ItemDataTransferObjects;
 import org.proyectdemo.Util.OrdenDTO;
 import org.proyectdemo.Util.ProductoDTO;
+import org.proyectdemo.model.Orden;
+import org.proyectdemo.model.Producto;
 import org.proyectdemo.model.Usuario;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +25,6 @@ public class UsuarioService {
         this.objectMapper = new ObjectMapper();
     }
 
-    /**
-     * Lee usuarios desde usuarios.json
-     */
     public List<Usuario> obtenerUsuarios() {
         try (InputStream is = getClass().getResourceAsStream("/usuarios.json")) {
             if (is == null) {
@@ -39,7 +38,11 @@ public class UsuarioService {
     }
 
     /**
-     * Devuelve usuarios en formato {id, label}
+     * Retrieves users in a simplified DTO format ({id, label}).
+     * <p>
+     * The label is built as "nombre apellido", sorted alphabetically by nombre.
+     *
+     * @return a list of {@link ItemDataTransferObjects} for use in pickers
      */
     public List<ItemDataTransferObjects> obtenerUsuariosConvert() {
         return obtenerUsuarios().stream()
@@ -49,35 +52,64 @@ public class UsuarioService {
     }
 
     /**
-     * Devuelve las órdenes de un usuario en formato {id, label}
+     * Retrieves all orders of a specific user as {@link OrdenDTO}.
+     * <p>
+     * Finds the user by id and maps each order to a DTO, including its products as {@link ProductoDTO}.
+     * Protects against null lists for orders and products.
+     *
+     * @param idUsuario the ID of the user whose orders are retrieved
+     * @return a list of {@link OrdenDTO} representing the user's orders
      */
     public List<OrdenDTO> obtenerOrdenes(Long idUsuario) {
         return obtenerUsuarios().stream()
                 .filter(u -> Objects.equals(u.getId(), idUsuario))
                 .findFirst()
-                .map(u -> u.getOrdenes().stream()
-                        .map(o -> new OrdenDTO(
-                                o.getOrdenId(),
-                                o.getFecha(),
-                                o.getProductos().stream()
+                .map(u -> {
+                    List<Orden> ordenes = u.getOrdenes() != null ? u.getOrdenes() : List.of();
+                    return ordenes.stream()
+                            .map(o -> {
+                                List<Producto> productos = o.getProductos() != null ? o.getProductos() : List.of();
+                                List<ProductoDTO> productosDTO = productos.stream()
                                         .map(p -> new ProductoDTO(
                                                 p.getProductoId(),
                                                 p.getNombre(),
                                                 p.getCantidad(),
                                                 p.getPrecioUnitario()
-                                        )).toList()
-                        )).toList())
+                                        )).toList();
+                                return new OrdenDTO(
+                                        o.getOrdenId(),
+                                        o.getFecha(),
+                                        productosDTO
+                                );
+                            }).toList();
+                })
                 .orElse(List.of());
     }
 
+
     /**
-     * Devuelve los productos de una orden en formato {id, label, cantidad, precioUnitario}
+     * Retrieves all products of a specific order for a given user.
+     * <p>
+     * Finds the order by user ID and order ID, and returns its products as {@link ProductoDTO}.
+     * Returns an empty list if the user has no orders or the order does not exist.
+     *
+     * @param idUsuario the ID of the user who owns the order
+     * @param idOrden   the ID of the order
+     * @return a list of {@link ProductoDTO} representing products of the order
      */
     public List<ProductoDTO> obtenerProductosDeOrdenDTO(Long idUsuario, Long idOrden) {
-        return obtenerOrdenes(idUsuario).stream()
-                .filter(o -> o.getId().equals(idOrden))
+        List<OrdenDTO> ordenes = obtenerOrdenes(idUsuario);
+        if (ordenes == null || ordenes.isEmpty()) {
+            return List.of();
+        }
+
+        return ordenes.stream()
+                .filter(o -> o.getId() != null && o.getId().equals(idOrden))
                 .findFirst()
-                .map(OrdenDTO::getProductos)
+                .map(o -> {
+                    List<ProductoDTO> productos = o.getProductos();
+                    return productos != null ? productos : List.<ProductoDTO>of();
+                })
                 .orElse(List.of());
     }
 

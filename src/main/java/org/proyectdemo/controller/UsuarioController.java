@@ -20,7 +20,15 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    // Trae usuarios para picker (DTO)
+
+    /**
+     * Endpoint: GET /usuarios/picker
+     * Returns a list of users in a simplified DTO format,
+     * suitable for use in a dropdown or picker.
+     * Each user is represented with an id and a label (full name).
+     *
+     * @return a {@link Resource} containing the user list or an error if none were found.
+     */
     @GetMapping("/picker")
     public Resource<List<ItemDataTransferObjects>> getUsuariosParaPicker() {
         try {
@@ -34,7 +42,17 @@ public class UsuarioController {
         }
     }
 
-    // Trae órdenes de un usuario para picker (DTO)
+
+
+    /**
+     * Endpoint: GET /usuarios/{id}/ordenes/picker
+     * Returns all orders associated with a specific user.
+     * Each order is represented as an {@link OrdenDTO}
+     * including its id, date, and products.
+     *
+     * @param id the user id
+     * @return a {@link Resource} containing the list of orders, or an error if none were found.
+     */
     @GetMapping("/{id}/ordenes/picker")
     public Resource<List<OrdenDTO>> getOrdenesParaPicker(@PathVariable Long id) {
         System.out.println("GET /usuarios/" + id + "/ordenes/picker called");
@@ -50,7 +68,19 @@ public class UsuarioController {
         }
     }
 
-    // Trae productos de una orden en formato DTO (estructura cruda)
+
+
+    /**
+     * Endpoint: GET /usuarios/{idUsuario}/ordenes/{idOrden}/productos
+     *
+     * Returns the products of a specific order belonging to a user.
+     * Each product is represented as a {@link ProductoDTO}
+     * with id, name, quantity, and unit price.
+     *
+     * @param idUsuario the user id (owner of the order)
+     * @param idOrden   the order id
+     * @return a {@link Resource} containing the list of products, or an error if none were found.
+     */
     @GetMapping("/{idUsuario}/ordenes/{idOrden}/productos")
     public Resource<List<ProductoDTO>> getProductosDeOrden(
             @PathVariable Long idUsuario,

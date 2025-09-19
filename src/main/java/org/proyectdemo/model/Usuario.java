@@ -1,7 +1,9 @@
 package org.proyectdemo.model;
-
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
+@Document(collection = "usuarios")
 public class Usuario {
     private long id;
     private String nombre;
